@@ -46,11 +46,16 @@
 npm install
 npm run build      # производит main.js
 npm run deploy     # сборка + копирование в dev_vault для теста
+npm run package    # сборка + архив dist/metal-image-viewer.zip для релиза
 ```
 
 Для разработки: `npm run dev` (watch-сборка), затем вручную `./deploy.ps1`.
 
+`npm run package` выводит команду `gh release create`. Перед этим увеличьте `version` в `manifest.json` (и `versions.json`); тег релиза должен совпадать с версией, а `main.js`, `manifest.json` и `styles.css` прикладываются к релизу рядом с архивом, потому что установщик Obsidian скачивает их по одному.
+
 ## Установка вручную
 
-Скопируйте `main.js`, `manifest.json` и `styles.css` в
-`<vault>/.obsidian/plugins/metal-image-viewer/` и включите плагин в настройках Obsidian.
+Скачайте `metal-image-viewer.zip` из [последнего релиза](https://github.com/Fan4Metal/metal-image-viewer/releases/latest), распакуйте его в `<vault>/.obsidian/plugins/` и включите плагин в настройках Obsidian.
+
+Или скопируйте `main.js`, `manifest.json` и `styles.css` в
+`<vault>/.obsidian/plugins/metal-image-viewer/`.

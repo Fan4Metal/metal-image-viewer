@@ -7,7 +7,8 @@
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"deploy": "node esbuild.config.mjs production && powershell -ExecutionPolicy Bypass -File ./deploy.ps1"
+		"deploy": "node esbuild.config.mjs production && powershell -ExecutionPolicy Bypass -File ./deploy.ps1",
+		"package": "npm run build && powershell -ExecutionPolicy Bypass -File ./release.ps1"
 	},
 	"keywords": ["obsidian", "plugin", "image", "viewer", "gallery"],
 	"license": "MIT",

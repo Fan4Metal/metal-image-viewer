@@ -2,6 +2,7 @@ node_modules/
 main.js
 main.js.map
 *.log
+dist/
 .DS_Store
 
 # Editor/tooling data

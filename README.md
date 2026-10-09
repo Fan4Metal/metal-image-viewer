@@ -46,11 +46,16 @@ Settings are stored in the plugin's `data.json` and applied the next time the vi
 npm install
 npm run build      # produces main.js
 npm run deploy     # build + copy into dev_vault for testing
+npm run package    # build + pack dist/metal-image-viewer.zip for a release
 ```
 
 For development: `npm run dev` (watch build), then run `./deploy.ps1` manually.
 
+`npm run package` prints the `gh release create` command. Bump `version` in `manifest.json` (and `versions.json`) first; the release tag must equal the version, and `main.js`, `manifest.json` and `styles.css` are attached next to the zip because Obsidian's installer downloads them individually.
+
 ## Manual installation
 
-Copy `main.js`, `manifest.json` and `styles.css` into
-`<vault>/.obsidian/plugins/metal-image-viewer/` and enable the plugin in Obsidian's settings.
+Download `metal-image-viewer.zip` from the [latest release](https://github.com/Fan4Metal/metal-image-viewer/releases/latest), unzip it into `<vault>/.obsidian/plugins/` and enable the plugin in Obsidian's settings.
+
+Alternatively, copy `main.js`, `manifest.json` and `styles.css` into
+`<vault>/.obsidian/plugins/metal-image-viewer/`.
