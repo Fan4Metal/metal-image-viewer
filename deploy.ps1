@@ -1,8 +1,19 @@
-# Copies the built plugin into the dev vault so it can be tested in Obsidian.
+# Copies the built plugin into a vault so it can be tested in Obsidian.
+# Usage:  ./deploy.ps1                          deploy to ./dev_vault
+#         ./deploy.ps1 -Vault "C:\Path\To\Vault"
+#         npm run deploy -- -Vault "C:\Path\To\Vault"   (build first)
+param(
+	[string]$Vault = (Join-Path $PSScriptRoot "dev_vault")
+)
+
 $ErrorActionPreference = "Stop"
 
+if (-not (Test-Path (Join-Path $Vault ".obsidian"))) {
+	throw "Not an Obsidian vault (no .obsidian folder): $Vault"
+}
+
 $root = $PSScriptRoot
-$dest = Join-Path $root "dev_vault\.obsidian\plugins\metal-image-viewer"
+$dest = Join-Path $Vault ".obsidian\plugins\metal-image-viewer"
 
 New-Item -ItemType Directory -Force -Path $dest | Out-Null
 

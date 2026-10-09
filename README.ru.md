@@ -51,6 +51,13 @@ npm run package    # сборка + архив dist/metal-image-viewer.zip дл�
 
 Для разработки: `npm run dev` (watch-сборка), затем вручную `./deploy.ps1`.
 
+Для деплоя в другое хранилище укажите `-Vault`:
+
+```powershell
+./deploy.ps1 -Vault "C:\Path\To\Vault"
+npm run deploy -- -Vault "C:\Path\To\Vault"   # сборка + деплой
+```
+
 `npm run package` выводит команду `gh release create`. Перед этим увеличьте `version` в `manifest.json` (и `versions.json`); тег релиза должен совпадать с версией, а `main.js`, `manifest.json` и `styles.css` прикладываются к релизу рядом с архивом, потому что установщик Obsidian скачивает их по одному.
 
 ## Установка вручную

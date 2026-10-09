@@ -51,6 +51,13 @@ npm run package    # build + pack dist/metal-image-viewer.zip for a release
 
 For development: `npm run dev` (watch build), then run `./deploy.ps1` manually.
 
+To deploy into another vault, pass `-Vault`:
+
+```powershell
+./deploy.ps1 -Vault "C:\Path\To\Vault"
+npm run deploy -- -Vault "C:\Path\To\Vault"   # build + deploy
+```
+
 `npm run package` prints the `gh release create` command. Bump `version` in `manifest.json` (and `versions.json`) first; the release tag must equal the version, and `main.js`, `manifest.json` and `styles.css` are attached next to the zip because Obsidian's installer downloads them individually.
 
 ## Manual installation
