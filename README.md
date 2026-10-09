@@ -1,10 +1,10 @@
-# Obsidian Image Viewer
+# Metal Image Viewer
 
 *English · [Русский](README.ru.md)*
 
 Click an image in a note to open it in a full-window viewer that fills the whole Obsidian window.
 
-![Image Viewer](images/example.webp)
+![Metal Image Viewer](images/example.webp)
 
 ## Features
 
@@ -18,7 +18,7 @@ Click an image in a note to open it in a full-window viewer that fills the whole
 
 ## Settings
 
-Available in **Settings → Community plugins → Image Viewer**:
+Available in **Settings → Community plugins → Metal Image Viewer**:
 
 | Option | Description |
 |---|---|
@@ -53,4 +53,4 @@ For development: `npm run dev` (watch build), then run `./deploy.ps1` manually.
 ## Manual installation
 
 Copy `main.js`, `manifest.json` and `styles.css` into
-`<vault>/.obsidian/plugins/image-viewer/` and enable the plugin in Obsidian's settings.
+`<vault>/.obsidian/plugins/metal-image-viewer/` and enable the plugin in Obsidian's settings.

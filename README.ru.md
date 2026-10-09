@@ -1,10 +1,10 @@
-# Obsidian Image Viewer
+# Metal Image Viewer
 
 *[English](README.md) · Русский*
 
 Плагин открывает изображения из заметки в полноэкранном просмотрщике на всё окно Obsidian: достаточно щёлкнуть по картинке.
 
-![Image Viewer](images/example.webp)
+![Metal Image Viewer](images/example.webp)
 
 ## Возможности
 
@@ -18,7 +18,7 @@
 
 ## Настройки
 
-Доступны в **Настройки → Community plugins → Image Viewer**:
+Доступны в **Настройки → Community plugins → Metal Image Viewer**:
 
 | Опция | Описание |
 |---|---|
@@ -53,4 +53,4 @@ npm run deploy     # сборка + копирование в dev_vault для �
 ## Установка вручную
 
 Скопируйте `main.js`, `manifest.json` и `styles.css` в
-`<vault>/.obsidian/plugins/image-viewer/` и включите плагин в настройках Obsidian.
+`<vault>/.obsidian/plugins/metal-image-viewer/` и включите плагин в настройках Obsidian.

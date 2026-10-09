@@ -1,5 +1,5 @@
 {
-	"name": "obsidian-image-viewer",
+	"name": "metal-image-viewer",
 	"version": "1.0.0",
 	"description": "Full-window image viewer for Obsidian with thumbnail gallery, arrow-key navigation and mouse-wheel zoom.",
 	"main": "main.js",

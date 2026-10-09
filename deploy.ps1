@@ -2,7 +2,7 @@
 $ErrorActionPreference = "Stop"
 
 $root = $PSScriptRoot
-$dest = Join-Path $root "dev_vault\.obsidian\plugins\image-viewer"
+$dest = Join-Path $root "dev_vault\.obsidian\plugins\metal-image-viewer"
 
 New-Item -ItemType Directory -Force -Path $dest | Out-Null
 

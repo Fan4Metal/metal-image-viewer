@@ -11,4 +11,4 @@ main.js.map
 # UI state and the plugin copy that deploy.ps1 generates.
 dev_vault/.obsidian/workspace.json
 dev_vault/.obsidian/workspace-mobile.json
-dev_vault/.obsidian/plugins/image-viewer/
+dev_vault/.obsidian/plugins/metal-image-viewer/
