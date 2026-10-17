@@ -15,6 +15,7 @@ Click an image in a note to open it in a full-window viewer that fills the whole
 - **Drag to pan** when the image is zoomed in.
 - **Double click** — toggle between the default zoom and 2× (or close the viewer, see settings).
 - **Esc** or a click on the dark backdrop closes the viewer. `+` / `-` / `0` zoom from the keyboard.
+- **File menu on right-click** — right-clicking an image in reading view gives the same menu as a link in the editor (open in a new tab / to the right / in a new window, rename, delete, reveal, copy path…). Images in a Metal Media Gallery keep that plugin's menu.
 
 ## Settings
 
@@ -38,6 +39,7 @@ Available in **Settings → Community plugins → Metal Image Viewer**:
 | **Minimum zoom** | lower zoom limit (< 1.0 lets you shrink below the default size) |
 | **Maximum zoom** | upper zoom limit (× the default size) |
 | **Zoom step** | wheel sensitivity — how much one notch zooms |
+| **File menu on right-click** | right-click on an image in reading view shows the file's link menu instead of Obsidian's image menu (on by default) |
 
 Settings are stored in the plugin's `data.json` and applied the next time the viewer opens.
 

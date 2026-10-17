@@ -1,4 +1,4 @@
-import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Menu, Plugin, PluginSettingTab, Setting, TFile, getLinkpath } from 'obsidian';
 
 interface ImageItem {
 	src: string;
@@ -35,6 +35,7 @@ interface ImageViewerSettings {
 	keepZoom: boolean;
 	loop: boolean;
 	closeOnBackdropClick: boolean;
+	fileMenuOnRightClick: boolean;
 }
 
 const DEFAULT_SETTINGS: ImageViewerSettings = {
@@ -54,6 +55,7 @@ const DEFAULT_SETTINGS: ImageViewerSettings = {
 	keepZoom: false,
 	loop: true,
 	closeOnBackdropClick: true,
+	fileMenuOnRightClick: true,
 };
 
 // Thumbnails keep a fixed ~4:3 aspect so they all look uniform.
@@ -62,6 +64,8 @@ const THUMB_ASPECT = 84 / 64;
 export default class ImageViewerPlugin extends Plugin {
 	settings: ImageViewerSettings = DEFAULT_SETTINGS;
 	private viewer: ImageViewer | null = null;
+	// A right-click claimed by handleContextMenu, waiting for showFileMenu.
+	private pendingMenu: { evt: MouseEvent; link: string; sourcePath: string } | null = null;
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
@@ -69,6 +73,11 @@ export default class ImageViewerPlugin extends Plugin {
 
 		// Capture phase so we intercept the click before the editor/preview handles it.
 		this.registerDomEvent(document, 'click', this.handleClick, { capture: true });
+
+		// Right-click on an image: claimed on the way down, the menu is shown on
+		// the way back up (see handleContextMenu).
+		this.registerDomEvent(document, 'contextmenu', this.handleContextMenu, { capture: true });
+		this.registerDomEvent(document, 'contextmenu', this.showFileMenu);
 	}
 
 	onunload(): void {
@@ -114,6 +123,73 @@ export default class ImageViewerPlugin extends Plugin {
 
 		this.openViewer(items, index);
 	};
+
+	// Right-clicking a vault image in reading view shows the menu Obsidian gives
+	// a link in the editor (open in a new tab / to the right / in a new window,
+	// rename, delete, reveal, copy path…) instead of its image menu.
+	// preventDefault here keeps Obsidian's image menu away (it skips handled
+	// events); the menu itself waits until the event bubbles back to the
+	// document, so a plugin that handles the image first and stops the event —
+	// Metal Media Gallery does this for its images — keeps its own menu.
+	private handleContextMenu = (evt: MouseEvent): void => {
+		this.pendingMenu = null;
+		if (!this.settings.fileMenuOnRightClick) return;
+		const target = evt.target;
+		if (!(target instanceof HTMLImageElement)) return;
+		if (!target.closest('.markdown-preview-view')) return;
+
+		// External images have no embed and keep the default behaviour.
+		const src = target.closest('.internal-embed')?.getAttribute('src');
+		if (!src) return;
+		const link = src.split('|')[0].trim();
+		const sourcePath = this.sourcePathOf(target);
+		const file = this.app.metadataCache.getFirstLinkpathDest(getLinkpath(link), sourcePath);
+		if (!(file instanceof TFile)) return;
+
+		evt.preventDefault();
+		this.pendingMenu = { evt, link, sourcePath };
+	};
+
+	private showFileMenu = (evt: MouseEvent): void => {
+		const pending = this.pendingMenu;
+		if (!pending || pending.evt !== evt) return;
+		this.pendingMenu = null;
+
+		const { link, sourcePath } = pending;
+		const ws = this.app.workspace;
+		const menu = new Menu();
+		ws.handleLinkContextMenu(menu, link, sourcePath);
+		// Menu.items is internal; if it is there and still empty, build the
+		// open items ourselves and let other plugins add the file-menu ones.
+		const items = (menu as unknown as { items?: unknown[] }).items;
+		if (Array.isArray(items) && items.length === 0) {
+			const file = this.app.metadataCache.getFirstLinkpathDest(getLinkpath(link), sourcePath);
+			const open = (title: string, icon: string, where: 'tab' | 'split' | 'window') =>
+				menu.addItem((item) =>
+					item.setTitle(title).setIcon(icon).onClick(() => ws.openLinkText(link, sourcePath, where)),
+				);
+			open('Open in new tab', 'file-plus', 'tab');
+			open('Open to the right', 'separator-vertical', 'split');
+			open('Open in new window', 'picture-in-picture-2', 'window');
+			if (file) {
+				menu.addSeparator();
+				ws.trigger('file-menu', menu, file, 'link-context-menu');
+			}
+		}
+		menu.showAtMouseEvent(evt);
+	};
+
+	// Path of the note whose view holds `el` ('' outside a workspace leaf, e.g.
+	// in a hover preview — links then resolve as from the vault root).
+	private sourcePathOf(el: Element): string {
+		let path = '';
+		this.app.workspace.iterateAllLeaves((leaf) => {
+			if (path || !leaf.view.containerEl.contains(el)) return;
+			const file = (leaf.view as { file?: TFile | null }).file;
+			if (file) path = file.path;
+		});
+		return path;
+	}
 
 	private openViewer(items: ImageItem[], index: number): void {
 		this.viewer?.close();
@@ -736,6 +812,20 @@ class ImageViewerSettingTab extends PluginSettingTab {
 						this.plugin.settings.zoomStep = value;
 						await this.plugin.saveSettings();
 					}),
+			);
+
+		new Setting(containerEl)
+			.setName('File menu on right-click')
+			.setDesc(
+				'Right-clicking an image in reading view shows the file menu a link gets ' +
+					'(open in a new tab / to the right / in a new window, rename, delete, reveal…) ' +
+					"instead of Obsidian's image menu.",
+			)
+			.addToggle((toggle) =>
+				toggle.setValue(this.plugin.settings.fileMenuOnRightClick).onChange(async (value) => {
+					this.plugin.settings.fileMenuOnRightClick = value;
+					await this.plugin.saveSettings();
+				}),
 			);
 	}
 }
