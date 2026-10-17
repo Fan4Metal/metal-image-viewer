@@ -13,7 +13,7 @@ Click an image in a note to open it in a full-window viewer that fills the whole
 - **Arrow-key navigation** `←` / `→` — previous / next image.
 - **Mouse-wheel zoom** — zooms toward the cursor; you can also shrink below the fitted size.
 - **Drag to pan** when the image is zoomed in.
-- **Double click** — toggle between the default zoom and 2×.
+- **Double click** — toggle between the default zoom and 2× (or close the viewer, see settings).
 - **Esc** or a click on the dark backdrop closes the viewer. `+` / `-` / `0` zoom from the keyboard.
 
 ## Settings
@@ -29,6 +29,7 @@ Available in **Settings → Community plugins → Metal Image Viewer**:
 | **Show navigation arrows** | show/hide the ‹ › arrows (arrow keys always work) |
 | **Show file name** | show the current file name in the top bar (centered) |
 | **Mouse wheel** | wheel mode: *Zoom* — wheel zooms, arrows navigate; *Navigate* — wheel navigates, Ctrl/Cmd+wheel zooms |
+| **Double click** | double-click action: *Toggle zoom* — default ↔ 2× (default); *Close* — close the viewer |
 | **Default zoom** | zoom on open: *fit without upscaling* (default), *fit with upscaling*, *fill height*, *fill width*, *100%* |
 | **Keep zoom between images** | preserve zoom level and position when switching images |
 | **Loop navigation** | wrap around from the last image to the first and vice versa |

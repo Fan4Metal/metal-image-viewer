@@ -8,6 +8,7 @@ interface ImageItem {
 
 type ThumbnailOrientation = 'landscape' | 'portrait' | 'square';
 type WheelMode = 'zoom' | 'navigate';
+type DoubleClickAction = 'zoom' | 'close';
 
 // How an image is scaled when it first opens.
 //   fit-down — fit the window without enlarging small images (current default)
@@ -25,6 +26,7 @@ interface ImageViewerSettings {
 	showArrows: boolean;
 	showFilename: boolean;
 	wheelMode: WheelMode;
+	doubleClickAction: DoubleClickAction;
 	defaultZoom: DefaultZoom;
 	backdropOpacity: number;
 	minZoom: number;
@@ -43,6 +45,7 @@ const DEFAULT_SETTINGS: ImageViewerSettings = {
 	showArrows: true,
 	showFilename: true,
 	wheelMode: 'zoom',
+	doubleClickAction: 'zoom',
 	defaultZoom: 'fit-down',
 	backdropOpacity: 0.92,
 	minZoom: 0.2,
@@ -285,10 +288,12 @@ class ImageViewer {
 			if (e.target === this.stage && !this.moved) this.close();
 		});
 
-		// Double click toggles between the default zoom and 2x.
+		// Double click either closes the viewer or toggles between the default
+		// zoom and 2x.
 		this.mainImg.addEventListener('dblclick', (e) => {
 			e.preventDefault();
-			if (Math.abs(this.scale - this.baseScale) > 1e-3) this.resetToBase();
+			if (this.settings.doubleClickAction === 'close') this.close();
+			else if (Math.abs(this.scale - this.baseScale) > 1e-3) this.resetToBase();
 			else this.applyZoom(2, 0, 0);
 		});
 
@@ -612,6 +617,20 @@ class ImageViewerSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.wheelMode)
 					.onChange(async (value) => {
 						this.plugin.settings.wheelMode = value as WheelMode;
+						await this.plugin.saveSettings();
+					}),
+			);
+
+		new Setting(containerEl)
+			.setName('Double click')
+			.setDesc('What a double click on the image does.')
+			.addDropdown((dropdown) =>
+				dropdown
+					.addOption('zoom', 'Toggle zoom (default ↔ 2×)')
+					.addOption('close', 'Close the viewer')
+					.setValue(this.plugin.settings.doubleClickAction)
+					.onChange(async (value) => {
+						this.plugin.settings.doubleClickAction = value as DoubleClickAction;
 						await this.plugin.saveSettings();
 					}),
 			);
